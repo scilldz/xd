@@ -1,0 +1,29 @@
+name: Auto Commit
+
+on:
+  schedule:
+    - cron: '5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  auto-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Tính số ngày contribution
+        run: |
+          DAYS=$(git log --pretty=format:"%ad" --date=short | sort | uniq | wc -l)
+          echo "Số ngày đã contribute: $DAYS" > contribution-days.txt
+
+      - name: Thiết lập Git config
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit thay đổi nếu có
+        run: |
+          git add .
+          git diff --cached --quiet || git commit -m "Auto commit: $(date '+%Y-%m-%d %H:%M:%S')"
+          git push
