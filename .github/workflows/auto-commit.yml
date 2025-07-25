@@ -2,7 +2,7 @@ name: Auto Commit
 
 on:
   schedule:
-    - cron: '0 5 * * * *'
+    - cron: '0 2 * * *' # Chạy vào 12h sáng mỗi ngày (giờ UTC)
   workflow_dispatch:
 
 jobs:
@@ -12,12 +12,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Tính số ngày contribution
+      - name: Chạy script tự động (ví dụ)
         run: |
-          DAYS=$(git log --pretty=format:"%ad" --date=short | sort | uniq | wc -l)
-          echo "Số ngày đã contribute: $DAYS" > contribution-days.txt
+          echo "$(date)" >> auto-commit-log.txt
 
-      - name: Thiết lập Git config
+      - name: Thiết lập Git config (dùng tài khoản của bạn)
         run: |
           git config user.name "scilldz"
           git config user.email "quanglinhvlogk4@gmail.com"
